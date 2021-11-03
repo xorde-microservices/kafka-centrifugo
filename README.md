@@ -1,31 +1,32 @@
 ## Installation
 
 ```bash
-$ npm install
+$ yarn
 ```
 
 ## Running locally
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn run start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn run start:prod
 ```
 
 ## Running in Docker
 
 ```bash
-git clone https://github.com/xorde-microservices/binance-kafka
-cd binance-kafka
-docker build --tag binance-kafka .
-docker run -d --name binance-kafka \
-  -e KAFKA_BROKER=localhost:9092 \
-  -e KAFKA_TOPIC=binance-trades \
-  -e BINANCE_PAIRS='XBT/USDT,ETH/USDT' \
-  binance-kafka
+git clone https://github.com/xorde-microservices/kafka-centrifugo
+cd kafka-centrifugo
+docker build --tag kafka-centrifugo .
+docker run -d --name kafka-centrifugo \
+  -e KAFKA_BROKER=<brokers> \
+  -e KAFKA_TOPICS=topic-1,topic-2 \
+  -e CENTRIFUGO_HOST=<host> \
+  -e CENTRIFUGO_TOKEN=<token>
+  kafka-centrifugo
 ```
