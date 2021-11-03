@@ -3,5 +3,6 @@
 	"api_key": "<YOUR-API-KEY-HERE>",
 	"admin": true,
 	"admin_password": "<PASSWORD>",
-	"admin_secret": "<SECRET>"
+	"admin_secret": "<SECRET>",
+	"client_insecure": true
 }

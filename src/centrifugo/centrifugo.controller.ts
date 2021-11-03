@@ -16,8 +16,8 @@ export class CentrifugoController {
   constructor(private service: CentrifugoService) {}
 
   @MessagePattern("binance.stream")
-  public async sendMail(@Payload() payload: any): Promise<boolean> {
-    console.log("%o", payload);
+  public async publish(@Payload() message: any): Promise<boolean> {
+    this.service.publish("binance.stream", message.value);
     return true;
   }
 }

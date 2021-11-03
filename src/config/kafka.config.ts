@@ -11,7 +11,6 @@ import { KafkaOptions, Transport } from "@nestjs/microservices";
 import { defaults } from "./config.defaults";
 
 export interface ExtendedKafkaOptions {
-  groupId: string;
   topics: string;
 }
 
@@ -23,6 +22,9 @@ export const kafkaConfig = (): IKafkaOptions => ({
   kafka: {
     transport: Transport.KAFKA,
     options: {
+      consumer: {
+        groupId: process.env.KAFKA_GROUP_ID,
+      },
       client: {
         clientId: process.env.KAFKA_CLIENT_ID,
         brokers: process.env.KAFKA_BROKERS.split(","),
@@ -34,7 +36,6 @@ export const kafkaConfig = (): IKafkaOptions => ({
         },
       },
     },
-    groupId: process.env.KAFKA_GROUP_ID,
     topics: process.env.KAFKA_TOPICS,
   },
 });
