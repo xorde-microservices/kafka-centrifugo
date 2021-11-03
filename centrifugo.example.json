@@ -1,0 +1,4 @@
+{
+	"token_hmac_secret_key": "<YOUR-SECRET-STRING-HERE>",
+	"api_key": "<YOUR-API-KEY-HERE>"
+}

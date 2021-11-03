@@ -1,0 +1,41 @@
+#
+# Run this to deploy
+#
+# docker-compose --env-file .env up -d --remove-orphans
+#
+# To rebuild p8-service run
+#
+# docker-compose build
+
+version: '3'
+
+services:
+  kafka-centrifugo:
+    build: .
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_CODE=${APP_CODE}
+      - APP_PORT=${APP_PORT}
+      - KAFKA_BROKERS=${KAFKA_BROKERS}
+      - KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}
+      - KAFKA_USERNAME=${KAFKA_USERNAME}
+      - KAFKA_PASSWORD=${KAFKA_PASSWORD}
+      - KAFKA_SSL=${KAFKA_SSL}
+      - KAFKA_TOPICS=${KAFKA_TOPICS}
+      - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
+      - CENTRIFUGO_PORT=8000
+      - CENTRIFUGO_TOKEN=${CENTRIFUGO_TOKEN}
+      - CENTRIFUGO_HOST=ws://centrifugo/connection/websocket
+
+  centrifugo-server:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:latest
+    volumes:
+      - ./centrifugo.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+    ports:
+      - ${CENTRIFUGO_PORT}:8000
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535

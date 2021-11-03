@@ -1,0 +1,28 @@
+# This is a docker-compose developer stack
+# LAUNCH
+# docker-compose -f dev.yml --env-file dev-stack.env up -d --remove-orphans
+#
+# RECREATE
+# docker-compose -f dev.yml --env-file dev-stack.env up -d --force-recreate --remove-orphans
+#
+# POSTGRES
+# http://localhost:18080
+#
+# REDIS
+# http://localhost:18081
+
+version: '3'
+
+services:
+  centrifugo-server:
+    container_name: centrifugo
+    image: centrifugo/centrifugo:latest
+    volumes:
+      - ./devstack-centrifugo.json:/centrifugo/config.json
+    command: centrifugo -c config.json
+    ports:
+      - ${CENTRIFUGO_PORT}:8000
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
