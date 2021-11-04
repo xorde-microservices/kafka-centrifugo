@@ -13,4 +13,5 @@ export const defaults = {
   APP_PORT: 3806,
   KAFKA_SSL: false,
   KAFKA_GROUP_ID: "centrifugo-relay",
+  CENTRIFUGO_TIMEOUT: 10000,
 };

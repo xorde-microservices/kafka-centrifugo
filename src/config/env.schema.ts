@@ -30,5 +30,8 @@ export const envSchema = Joi.object({
 
   // centrifugo
   CENTRIFUGO_HOST: Joi.string().required(),
-  CENTRIFUGO_TOKEN: Joi.string().required(),
+  CENTRIFUGO_APIKEY: Joi.string().required(),
+  CENTRIFUGO_TIMEOUT: Joi.number()
+    .allow("")
+    .default(defaults.CENTRIFUGO_TIMEOUT),
 });

@@ -11,8 +11,10 @@ import { Injectable, Logger } from "@nestjs/common";
 import { Client, ClientKafka } from "@nestjs/microservices";
 import { kafkaConfig } from "../config/kafka.config";
 import { centrifugoConfig } from "../config/centrifugo.config";
-import { Consumer } from "@nestjs/microservices/external/kafka.interface";
-import Centrifuge from "centrifuge";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { KafkaService } from "../kafka/kafka.service";
+
+const j = (s) => JSON.stringify(s);
 
 interface ServiceStats {
   events: number;
@@ -26,28 +28,61 @@ interface ServiceStats {
 
 @Injectable()
 export class CentrifugoService {
+  private readonly config = centrifugoConfig().centrifugo;
   private readonly logger = new Logger(this.constructor.name);
-  private topics = kafkaConfig().kafka.topics.split(",")
+  private topics = kafkaConfig().kafka.topics.split(",");
+  private stats: ServiceStats = {events: 0, errors: 0, skipped: 0};
 
-  @Client(kafkaConfig().kafka)
-  client: ClientKafka;
-  consumer: Consumer;
-
-  centrifuge: Centrifuge;
-
-  constructor() {
-    this.logger.log(`Kafka topics: ${this.topics.join(",")}`);
+  constructor(
+    private readonly kafka: KafkaService,
+  ) {
+    this.logger.log(`Kafka topics: [${this.topics.join(",")}]`);
   }
 
   async onModuleInit() {
-    this.centrifuge = new Centrifuge(centrifugoConfig().centrifugo.host);
-    this.centrifuge.setToken(centrifugoConfig().centrifugo.token);
-    this.centrifuge.connect();
+    this.logger.log(`Centrifugo host ${centrifugoConfig().centrifugo.host}`);
 
+    setInterval(() => {
+      this.stats.memory = process.memoryUsage();
+      this.logger.log(j(this.stats));
+    }, 1000 * 60);
+
+    this.kafka.consumerHandler = (payload) => {
+      const { topic:channel, message:data } = payload;
+      this.publish(channel, data);
+    }
   }
 
-  publish(channel: string, message: any) {
-    this.logger.log(`${JSON.stringify({channel, message})}`)
-    this.centrifuge.publish(channel, message).catch((e) => this.logger.error(e.message));
+  public async publish(channel: string, data: any) {
+    const body = {
+      method: "publish",
+      params: { channel, data },
+    };
+    return this.send(body);
+  }
+
+  public async send(body: any): Promise<any> {
+    this.stats.events++;
+    const options: AxiosRequestConfig = {
+      headers: {
+        Authorization: `apikey ${centrifugoConfig().centrifugo.apiKey}`,
+        "Content-Type": "application/json",
+      },
+      timeout: centrifugoConfig().centrifugo.timeout,
+    };
+
+    const response = await axios
+      .post(centrifugoConfig().centrifugo.host, body, options)
+      .catch((e) => {
+        this.logger.error(e);
+      })
+      .then((r: AxiosResponse) => {
+        if (r?.data?.error) {
+          this.stats.errors++;
+          this.logger.error(`Centrifugo: ${r.data}`);
+        } else {
+          return r;
+        }
+      });
   }
 }

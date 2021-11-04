@@ -1,8 +1,9 @@
 {
 	"token_hmac_secret_key": "<YOUR-SECRET-STRING-HERE>",
-	"api_key": "<YOUR-API-KEY-HERE>",
+	"api_key": "1234567890",
 	"admin": true,
 	"admin_password": "<PASSWORD>",
 	"admin_secret": "<SECRET>",
-	"client_insecure": true
+	"client_insecure": true,
+	"allowed_origins": "*"
 }

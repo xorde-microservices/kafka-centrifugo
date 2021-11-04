@@ -34,9 +34,6 @@ async function bootstrap() {
   });
 
   const config = app.get(ConfigService);
-  app.connectMicroservice(kafkaConfig().kafka);
-
-  await app.startAllMicroservices();
   await app.listen(config.get<number>("app.port"));
   logger.log(`App: ${toLocalhost(await app.getUrl())}`);
 }

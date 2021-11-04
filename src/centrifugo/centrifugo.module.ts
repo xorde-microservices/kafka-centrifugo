@@ -8,12 +8,11 @@
  **/
 
 import { Module } from "@nestjs/common";
-import { CentrifugoController } from "./centrifugo.controller";
 import { CentrifugoService } from "./centrifugo.service";
+import { KafkaModule } from "../kafka/kafka.module";
 
 @Module({
-  imports: [],
-  controllers: [CentrifugoController],
+  imports: [KafkaModule],
   providers: [CentrifugoService],
   exports: [CentrifugoService],
 })
