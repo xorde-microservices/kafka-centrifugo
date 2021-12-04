@@ -8,7 +8,6 @@
  **/
 
 import { Injectable, Logger } from "@nestjs/common";
-import { Client, ClientKafka } from "@nestjs/microservices";
 import { kafkaConfig } from "../config/kafka.config";
 import { centrifugoConfig } from "../config/centrifugo.config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
@@ -49,14 +48,14 @@ export class CentrifugoService {
 
     this.kafka.consumerHandler = (payload) => {
       const { topic:channel, message:data } = payload;
-      this.publish(channel, data);
+      this.publish({ channel, data });
     }
   }
 
-  public async publish(channel: string, data: any) {
+  public async publish(params: { channel: string, data: any }) {
     const body = {
       method: "publish",
-      params: { channel, data },
+      params,
     };
     return this.send(body);
   }
