@@ -7,6 +7,7 @@
  * Written by Xander Tovski, 2019-2020
  **/
 
+
 const transformURL = (url: string): string => {
   if (url.length > 0) {
     const path = "/api";

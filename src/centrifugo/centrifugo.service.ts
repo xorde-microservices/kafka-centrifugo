@@ -40,8 +40,6 @@ export class CentrifugoService {
   }
 
   async onModuleInit() {
-    this.logger.log(`Centrifugo host ${centrifugoConfig().centrifugo.host}`);
-
     setInterval(() => {
       this.stats.memory = process.memoryUsage();
       this.logger.log(j(this.stats));
