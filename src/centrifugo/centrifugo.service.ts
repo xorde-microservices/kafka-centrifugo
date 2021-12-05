@@ -36,6 +36,7 @@ export class CentrifugoService {
     private readonly kafka: KafkaService,
   ) {
     this.logger.log(`Kafka topics: [${this.topics.join(",")}]`);
+    this.logger.log("Centrifugo host: " + centrifugoConfig().centrifugo.host)
   }
 
   async onModuleInit() {
