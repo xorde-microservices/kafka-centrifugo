@@ -46,7 +46,9 @@ export class CentrifugoService {
     }, 1000 * 60);
 
     this.kafka.consumerHandler = (payload) => {
-      const { topic:channel, message:data } = payload;
+      const { topic:channel, message } = payload;
+      const { key, value } = message;
+      const data = { key, value: value.toString() };
       this.publish({ channel, data });
     }
   }
