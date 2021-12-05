@@ -25,7 +25,7 @@ services:
       - KAFKA_GROUP_ID=${KAFKA_GROUP_ID}
       - CENTRIFUGO_PORT=8000
       - CENTRIFUGO_TOKEN
-      - CENTRIFUGO_HOST=ws://centrifugo-server/connection/websocket
+      - CENTRIFUGO_HOST=ws://centrifugo-server:8000/connection/websocket
       - CENTRIFUGO_APIKEY
 
   centrifugo-server:
