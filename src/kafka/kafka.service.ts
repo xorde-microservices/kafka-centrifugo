@@ -53,7 +53,11 @@ export class KafkaService {
       await this.consumer.run({
         eachMessage: async (payload) => {
           if (this.subchannel) {
-            payload.topic = payload.topic + "." + payload.message.value[this.subchannel];
+            // parse message value and get value of this.subchannel property:
+            const topicSuffix = JSON.parse(payload.message.value.toString())[this.subchannel];
+            if (topicSuffix) {
+              payload.topic = payload.topic + "." + topicSuffix;
+            }
           }
           this.consumerHandler(payload);
         },
