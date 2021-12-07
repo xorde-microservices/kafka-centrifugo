@@ -31,6 +31,7 @@ export class CentrifugoService {
   private readonly logger = new Logger(this.constructor.name);
   private topics = kafkaConfig().kafka.topics.split(",");
   private stats: ServiceStats = {events: 0, errors: 0, skipped: 0};
+  private channels = [];
 
   constructor(
     private readonly kafka: KafkaService,
@@ -49,6 +50,10 @@ export class CentrifugoService {
       const { topic:channel, message } = payload;
       const { key, value } = message;
       const data = { key, value: value.toString() };
+      if (!this.channels.includes(channel)) {
+        // this will fire log message as soon as a message is published in new channel
+        this.logger.log(`Channel introduced ${channel}`);
+      }
       this.publish({ channel, data });
     }
   }
