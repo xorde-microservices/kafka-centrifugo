@@ -9,6 +9,7 @@ export class KafkaService {
   private readonly logger = new Logger(this.constructor.name);
   private readonly config = kafkaConfig().kafka;
   private readonly topics = kafkaConfig().kafka.topics.split(",");
+  private readonly subchannel = kafkaConfig().kafka.subchannel;
   private kafka: Kafka;
   private consumer: Consumer;
 
@@ -51,6 +52,9 @@ export class KafkaService {
       }
       await this.consumer.run({
         eachMessage: async (payload) => {
+          if (this.subchannel) {
+            payload.topic = payload.topic + "." + payload.message.value[this.subchannel];
+          }
           this.consumerHandler(payload);
         },
       });

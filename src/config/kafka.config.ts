@@ -12,6 +12,7 @@ import { defaults } from "./config.defaults";
 
 export interface ExtendedKafkaOptions {
   topics: string;
+  subchannel: string;
 }
 
 export interface IKafkaOptions {
@@ -37,5 +38,6 @@ export const kafkaConfig = (): IKafkaOptions => ({
       },
     },
     topics: process.env.KAFKA_TOPICS,
+    subchannel: process.env.KAFKA_SUBCHANNEL_FIELD,
   },
 });
