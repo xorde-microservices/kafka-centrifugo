@@ -53,6 +53,7 @@ export class CentrifugoService {
       if (!this.channels.includes(channel)) {
         // this will fire log message as soon as a message is published in new channel
         this.logger.log(`Channel introduced ${channel}`);
+        this.channels.push(channel);
       }
       this.publish({ channel, data });
     }
