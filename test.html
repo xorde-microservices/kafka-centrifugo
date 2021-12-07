@@ -18,7 +18,7 @@
         console.log("disconnected", ctx);
     });
 
-    centrifuge.subscribe("huobi.stream.ticker", function(ctx) {
+    centrifuge.subscribe("huobi.stream.ticker.btcusdt", function(ctx) {
 
         container.innerHTML = ctx.data.key + ":" + ctx.data.value;
         document.title = ctx.data.value;
