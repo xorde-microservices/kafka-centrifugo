@@ -12,6 +12,7 @@ import { kafkaConfig } from "../config/kafka.config";
 import { centrifugoConfig } from "../config/centrifugo.config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { KafkaService } from "../kafka/kafka.service";
+import { v } from "../common/log";
 
 const j = (s) => JSON.stringify(s);
 
@@ -36,7 +37,6 @@ export class CentrifugoService {
   constructor(
     private readonly kafka: KafkaService,
   ) {
-    this.logger.log(`Kafka topics: [${this.topics.join(",")}]`);
     this.logger.log("Centrifugo host: " + centrifugoConfig().centrifugo.host)
   }
 
@@ -80,12 +80,12 @@ export class CentrifugoService {
     const response = await axios
       .post(centrifugoConfig().centrifugo.host, body, options)
       .catch((e) => {
-        this.logger.error(e);
+        this.logger.error("Post error: " + v(e));
       })
       .then((r: AxiosResponse) => {
         if (r?.data?.error) {
           this.stats.errors++;
-          this.logger.error(`Centrifugo: ${r.data}`);
+          this.logger.error("Response error: " + v(r.data));
         } else {
           return r;
         }

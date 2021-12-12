@@ -27,7 +27,6 @@ export const envSchema = Joi.object({
   KAFKA_USERNAME: Joi.string().allow(""),
   KAFKA_PASSWORD: Joi.string().allow(""),
   KAFKA_BROKERS: Joi.string().required(),
-  KAFKA_SUBCHANNEL_FIELD: Joi.string().empty("").allow(""),
 
   // centrifugo
   CENTRIFUGO_HOST: Joi.string().required(),
