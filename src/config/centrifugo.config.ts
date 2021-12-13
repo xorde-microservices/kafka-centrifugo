@@ -29,6 +29,7 @@ export interface ICentrifugoConfigOptions {
   host: string;
   apiKey: string;
   timeout: number;
+  intervals: string;
 }
 
 interface ICentrifugoConfig {
@@ -40,5 +41,6 @@ export const centrifugoConfig = (): ICentrifugoConfig => ({
     host: transformURL(process.env.CENTRIFUGO_HOST),
     apiKey: process.env.CENTRIFUGO_APIKEY,
     timeout: Number(process.env.CENTRIFUGO_TIMEOUT),
+    intervals: process.env.CENTRIFUGO_INTERVALS,
   },
 });

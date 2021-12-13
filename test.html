@@ -1,13 +1,18 @@
-<html>
+<html lang="">
 <head>
     <title>Centrifugo quick start</title>
 </head>
 <body>
-<div id="counter">-</div>
+<div id="container1">-</div>
+<hr>
+<div id="container2">-</div>
+
 <script src="https://cdn.jsdelivr.net/gh/centrifugal/centrifuge-js@2.7.3/dist/centrifuge.min.js"></script>
 <script type="text/javascript">
-    const container = document.getElementById('counter')
-    const centrifuge = new Centrifuge("ws://192.248.174.29:8080/connection/websocket");
+    const container1 = document.getElementById('container1');
+    const container2 = document.getElementById('container2');
+
+    const centrifuge = new Centrifuge("ws://localhost:8000/connection/websocket");
     // centrifuge.setToken("<TOKEN>");
 
     centrifuge.on('connect', function(ctx) {
@@ -18,9 +23,15 @@
         console.log("disconnected", ctx);
     });
 
+    centrifuge.subscribe("huobi.stream.ticker.btcusdt@1000", function(ctx) {
+
+        container1.innerHTML = ctx.data.key + ":" + ctx.data.value;
+        document.title = ctx.data.value;
+    });
+
     centrifuge.subscribe("huobi.stream.ticker.btcusdt", function(ctx) {
 
-        container.innerHTML = ctx.data.key + ":" + ctx.data.value;
+        container2.innerHTML = ctx.data.key + ":" + ctx.data.value;
         document.title = ctx.data.value;
     });
 

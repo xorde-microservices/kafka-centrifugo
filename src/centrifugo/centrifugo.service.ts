@@ -26,6 +26,8 @@ interface ServiceStats {
   memory?: NodeJS.MemoryUsage;
 }
 
+const INTERVAL_MSEC = 1000;
+
 @Injectable()
 export class CentrifugoService {
   private readonly config = centrifugoConfig().centrifugo;
@@ -33,11 +35,15 @@ export class CentrifugoService {
   private topics = kafkaConfig().kafka.topics.split(",");
   private stats: ServiceStats = {events: 0, errors: 0, skipped: 0};
   private channels = [];
+  private lastIntervalMessage = [];
+  private intervals = [];
 
   constructor(
     private readonly kafka: KafkaService,
   ) {
     this.logger.log("Centrifugo host: " + centrifugoConfig().centrifugo.host)
+    this.intervals = this.config.intervals.split(",").map(m => Number(m));
+    this.logger.log("Centrifugo intervals: " + v(this.intervals));
   }
 
   async onModuleInit() {
@@ -55,6 +61,17 @@ export class CentrifugoService {
         this.logger.log(`Channel introduced ${channel}`);
         this.channels.push(channel);
       }
+
+      this.intervals.forEach((e) => {
+        if (Date.now() - (this.lastIntervalMessage[channel]?.[e] || 0) > e) {
+          this.publish({ channel: channel + `@${e}`, data });
+          if (!this.lastIntervalMessage[channel]) {
+            this.lastIntervalMessage[channel] = [];
+          }
+          this.lastIntervalMessage[channel][e] = Date.now();
+        }
+      });
+
       this.publish({ channel, data });
     }
   }
