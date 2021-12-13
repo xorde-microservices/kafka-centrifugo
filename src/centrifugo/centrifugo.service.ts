@@ -32,7 +32,6 @@ const INTERVAL_MSEC = 1000;
 export class CentrifugoService {
   private readonly config = centrifugoConfig().centrifugo;
   private readonly logger = new Logger(this.constructor.name);
-  private topics = kafkaConfig().kafka.topics.split(",");
   private stats: ServiceStats = {events: 0, errors: 0, skipped: 0};
   private channels = [];
   private lastIntervalMessage = [];
@@ -42,7 +41,7 @@ export class CentrifugoService {
     private readonly kafka: KafkaService,
   ) {
     this.logger.log("Centrifugo host: " + centrifugoConfig().centrifugo.host)
-    this.intervals = this.config.intervals.split(",").map(m => Number(m));
+    this.intervals = this.config.intervals?.split(",").map(m => Number(m));
     this.logger.log("Centrifugo intervals: " + v(this.intervals));
   }
 

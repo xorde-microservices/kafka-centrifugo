@@ -27,6 +27,7 @@ services:
       - CENTRIFUGO_TOKEN
       - CENTRIFUGO_HOST=ws://centrifugo-server:8000/api
       - CENTRIFUGO_APIKEY
+      - CENTRIFUGO_INTERVALS
 
   centrifugo-server:
     image: centrifugo/centrifugo:latest
