@@ -83,13 +83,13 @@ export class KafkaService {
           // if subchannel is configured, then add channel suffix to it:
           if (topic.subchannel) {
             const topicSuffix = JSON.parse(payload.message.value.toString())[topic.subchannel];
-            payload.topic = payload.topic + "." + topicSuffix;
+            payload.topic = topicSuffix ? payload.topic + "." + topicSuffix : payload.topic;
           }
 
           // if userchannel is configured, then add user-channel suffix to it;
           if (topic.userchannel) {
             const topicSuffix = JSON.parse(payload.message.value.toString())[topic.userchannel];
-            payload.topic = payload.topic + "#" + topicSuffix;
+            payload.topic = topicSuffix ? payload.topic + "#" + topicSuffix : payload.topic;
           }
 
           this.logger.verbose("Message: " + v(R.pick(["topic", "key", "timestamp"], payload)));
